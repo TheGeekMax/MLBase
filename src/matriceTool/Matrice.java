@@ -66,6 +66,21 @@ public class Matrice {
         }
     }
 
+    public void mutate(float sigma){
+        for(int i = 0 ; i < m; i ++){
+            for(int j = 0 ; j < n; j ++){
+                mat[i][j] += (float) ((Math.random()*2*sigma)-sigma);
+            }
+        }
+    }
+
+    public void apply(Function func){
+        for(int i = 0 ; i < m; i ++){
+            for(int j = 0 ; j < n; j ++){
+                mat[i][j] = func.apply(mat[i][j]);
+            }
+        }
+    }
 
     public int getLineCount(){
         return m;
