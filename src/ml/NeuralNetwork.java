@@ -2,25 +2,23 @@ package ml;
 
 import matriceTool.*;
 
-public class NeuralNetwork<T extends GeneticInterface> {
-    Matrice weightIH, weightIO;
+public class NeuralNetwork {
+    Matrice weightIH, weightHO;
     int inputSize, hiddenSize, outputSize;
-    T game;
 
 
-    public NeuralNetwork(int intputSize, int hiddenSize, int outputSize,T game){
-        weightIH = new Matrice(hiddenSize,intputSize);
-        weightIO = new Matrice(outputSize,hiddenSize);
+    public NeuralNetwork(int inputSize, int hiddenSize, int outputSize){
+        weightIH = new Matrice(hiddenSize,inputSize);
+        weightHO = new Matrice(outputSize,hiddenSize);
         mutate(1f);
-        this.inputSize = intputSize;
+        this.inputSize = inputSize;
         this.hiddenSize = hiddenSize;
         this.outputSize = outputSize;
-        this.game = game;
     }
 
     public void mutate(float sigma){
         weightIH.mutate(sigma);
-        weightIO.mutate(sigma);
+        weightHO.mutate(sigma);
     }
 
     public float[] feedForward(float[] inputArray){
@@ -38,7 +36,7 @@ public class NeuralNetwork<T extends GeneticInterface> {
 
         Matrice hidden = weightIH.mult(input);
         hidden.apply(act);
-        Matrice output = weightIO.mult(hidden);
+        Matrice output = weightHO.mult(hidden);
         float[] outFinal = new float[outputSize];
 
         for(int i =0; i < outputSize; i ++){
@@ -46,6 +44,23 @@ public class NeuralNetwork<T extends GeneticInterface> {
         }
 
         return outFinal;
+    }
+
+    public void setWeights(Matrice IH, Matrice HO){
+        weightIH.set(IH);
+        weightHO.set(HO);
+    }
+
+    public void setWeights(NeuralNetwork reference){
+        setWeights(reference.getWeightIH(),reference.getWeightHO());
+    }
+
+    public Matrice getWeightIH(){
+        return weightIH;
+    }
+
+    public Matrice getWeightHO(){
+        return weightHO;
     }
 
     public static float ReLU(float x){
